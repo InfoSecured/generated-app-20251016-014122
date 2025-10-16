@@ -56,7 +56,8 @@ export function ActiveOutagesPanel() {
     return outages.filter(outage => {
       const query = searchQuery.toLowerCase();
       const searchMatch = outage.systemName.toLowerCase().includes(query) ||
-                          outage.description.toLowerCase().includes(query);
+                          outage.description.toLowerCase().includes(query) ||
+                          outage.id.toLowerCase().includes(query);
       const impactMatch = selectedImpactLevels.size === 0 || selectedImpactLevels.has(outage.impactLevel);
       const dateMatch = !dateRange?.from || isWithinInterval(parseISO(outage.startTime), {
         start: dateRange.from,
@@ -119,7 +120,10 @@ function OutageItem({ outage }: { outage: Outage }) {
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <StatusIndicator status={outage.impactLevel} />
-            <h3 className="font-semibold text-foreground">{outage.systemName}</h3>
+            <h3 className="font-semibold text-foreground truncate">
+              <span className="font-normal text-muted-foreground mr-2">{outage.id}:</span>
+              {outage.systemName}
+            </h3>
           </div>
           <p className="text-sm text-muted-foreground">{outage.description}</p>
         </div>
